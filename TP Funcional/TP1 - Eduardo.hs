@@ -13,11 +13,11 @@ comoEsta cliente
                 | otherwise = "Duro"
 suPropioAmigo (UnCliente nom _ _) (UnCliente nomami _ _) = nomami==nom
 esAmigo (UnCliente _ _ ami) amigo = (elem amigo) ami
-sumarAmigo (UnCliente nom res ami) amigo = (UnCliente nom res (ami ++ amigo)) 
+sumarAmigo (UnCliente nom res ami) (UnCliente nom2 res2 ami2) = UnCliente nom res ((UnCliente nom2 res2 ami2) : ami)
 agregarAmigo cliente amigo
                 | suPropioAmigo cliente amigo= cliente
                 | esAmigo cliente amigo = cliente
-                | otherwise = cliente -- sumarAmigo cliente amigo
+                | otherwise = (sumarAmigo cliente amigo)
 tomar bebida cliente = bebida cliente
 grogXD (UnCliente nom res ami) = (UnCliente nom (res-res) ami)
 jarraLoca (UnCliente nom res ami) = (UnCliente nom (res-10) (map (jarraCompartida) ami))
