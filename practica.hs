@@ -1,24 +1,25 @@
 data Cancion = UnaCancion String Int String deriving (Show)
-data Disco = UnDisco String String [Cancion]
+data Disco = UnDisco String String [Cancion] deriving (Show)
 
-pepe = UnaCancion "Pepe" 120 "Pepin"
-pepe1 = UnaCancion "Pepe" 120 "Pepin"
-pepe2 = UnaCancion "Pepe" 120 "Pepin"
-pepe3 = UnaCancion "Pepe" 120 "Pepin"
-pepe4 = UnaCancion "Pepe" 120 "Pepin"
-pepe5 = UnaCancion "Pepe" 120 "Pepin"
-pepe6 = UnaCancion "Pepe" 120 "Pepin"
-pepe7 = UnaCancion "Pepe" 120 "Pepin"
-pepe8 = UnaCancion "Pepe" 120 "Pepin"
+pepe = UnaCancion "Pepe" 59 "Pepin"
+stairwayToHeaven = UnaCancion "Starway to Heaven" 651 "Led Zeppelin"
+zombie = UnaCancion "Zombie" 315 "The Cranberries"
+californication = UnaCancion "Californication" 321 "Red Hot Chili Peppers"
+losingMyReligion = UnaCancion "Losing My Religion" 294 "R.E.M"
+whatsUp = UnaCancion "What's Up" 299 "4 Non Blondes"
+wonderwall = UnaCancion "Wonderwall" 278 "Oasis"
+bitterSweetSymphony = UnaCancion "Bitter Sweet Symphony" 278 "The Verve"
+heartShapedBox = UnaCancion "Heart Shaped Box" 285 "Nirvana"
 
 pepeblues = UnaCancion "Pepeblues" 120 "Pepin"
-pepeblues1 = UnaCancion "Pepeblues" 120 "Pepin"
-pepeblues2 = UnaCancion "Pepeblues" 120 "Pepin"
-pepeblues3 = UnaCancion "Pepeblues" 120 "Pepin"
-pepeblues4 = UnaCancion "Pepeblues" 120 "Pepin"
+juntosAlaPar = UnaCancion "Juntos a la Par" 164 "Pappo"
+longchampsBoogieblues = UnaCancion "Longchamps Boogie" 309 "Pappo"
+miViejablues = UnaCancion "Mi Vieja" 156 "Pappo"
+ruta66 = UnaCancion "Ruta 66" 184 "Pappo"
 
-pepeclassics = UnDisco "Pepeclassics" "Sony Records" [pepe, pepeblues,pepe1,pepe2,pepe3,pepe4,pepe5,pepe6,pepe7,pepe8]
-pepeclassicblues = UnDisco "Pepeclassicblues" "Sony Records" [pepeblues, pepeblues1, pepeblues2, pepeblues3, pepeblues4]
+pepeclassics = UnDisco "Pepe Classics" "Sony Records" [pepe, pepeblues,stairwayToHeaven,zombie,californication,losingMyReligion,whatsUp,wonderwall,bitterSweetSymphony,heartShapedBox]
+pepeclassics2 = UnDisco "Pepe Classics 2" "Sony Records" [pepeblues,stairwayToHeaven,losingMyReligion,whatsUp,bitterSweetSymphony,heartShapedBox]
+pepeclassicblues = UnDisco "Pepe Classic Blues" "Sony Records" [pepeblues, juntosAlaPar, longchampsBoogieblues, miViejablues, ruta66]
 
 esAnonima (UnaCancion _ _ autor) = length autor == 0
 esInterludio (UnaCancion _ tiempo _) = tiempo > 60
@@ -33,6 +34,11 @@ esEP disco = cantidadDeTemas disco < 9 && cantidadDeTemas disco > 4 && cantidadT
 esBlusero disco = cantidadDeTemas disco == cantidadTemasLargos disco esBlues
 cantidadTemasLargos (UnDisco _ _ temas) f = length (filter f temas)
 cantidadDeTemas (UnDisco _ _ temas) = length temas
+--libreDeInterludios (UnDisco _ _ temas)  = filter esInterludio temas
+arrancaConIntro disco = not(esInterludio (primerTema disco))
+primerTema (UnDisco _ _ temas) = head temas
+--remixarDisco (UnDisco nombre disquera temas) autorRemix = UnDisco (nombreRemix nombre autorRemix) disquera ()
 
 --hacerCover cancion autorCover = UnaCancion (nombreCover nombre autor) tiempo autorCover
---cambioAutor (UnaCancion _ _ autor) = 
+--cambioAutor (UnaCancion _ _ autor) =
+--cambioAutor (UnaCancion nombre tiempo autor) autorCover = UnaCancion nombre tiempo autorCover
