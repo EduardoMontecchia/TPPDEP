@@ -34,7 +34,7 @@ esEP disco = cantidadDeTemas disco < 9 && cantidadDeTemas disco > 4 && cantidadT
 esBlusero disco = cantidadDeTemas disco == cantidadTemasLargos disco esBlues
 cantidadTemasLargos (UnDisco _ _ temas) f = length (filter f temas)
 cantidadDeTemas (UnDisco _ _ temas) = length temas
---libreDeInterludios (UnDisco _ _ temas)  = filter esInterludio temas
+--libreDeInterludios (UnDisco _ _ temas)  = map esInterludio temas
 arrancaConIntro disco = not(esInterludio (primerTema disco))
 primerTema (UnDisco _ _ temas) = head temas
 --remixarDisco (UnDisco nombre disquera temas) autorRemix = UnDisco (nombreRemix nombre autorRemix) disquera ()
