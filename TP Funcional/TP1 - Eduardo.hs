@@ -20,7 +20,8 @@ agregarAmigo cliente amigo
                 | otherwise = cliente -- sumarAmigo cliente amigo
 tomar bebida cliente = bebida cliente
 grogXD (UnCliente nom res ami) = (UnCliente nom (res-res) ami)
-jarraLoca (UnCliente nom res ami) = (UnCliente nom (res-10) ami)
+jarraLoca (UnCliente nom res ami) = (UnCliente nom (res-10) (map (jarraCompartida) ami))
+jarraCompartida (UnCliente nom res ami) = (UnCliente nom (res-10) ami)
 klusener (UnCliente nom res ami) gusto = (UnCliente nom (res - length gusto) ami )
 tintico (UnCliente nom res ami) = (UnCliente nom (res + 5 * (length ami)) ami )
 soda (UnCliente nom res ami) fuerza = (UnCliente ((erp fuerza)++nom) res ami)
