@@ -1,3 +1,5 @@
+{- Modelamos el tipo de dato cliente utilizando un tipo data con un String para el nombre, un Int para la resistencia y 
+una lista conformada por el mismo tipo data para representar a los amigos del cliente-}
 data Cliente = UnCliente String Int [Cliente] deriving (Show, Eq)
 data Bebida = UnaBebida String (Cliente->Cliente)
 
@@ -46,3 +48,6 @@ hacerAmistad cliente1 cliente2
 
 verificarAmistad cliente1 cliente2 = cliente1==cliente2 || elem cliente2(amigos cliente1)
 agregarAmigo (UnCliente n1 r1 a1) (UnCliente n2 r2 a2) = UnCliente n1 r1 ((UnCliente n2 r2 a2):a1)
+
+{- Itinerario ana en consola:
+  (tomarBebida jarraLoca.tomarBebida (klusener "chocolate").rescatarse 2.tomarBebida (klusener "huevo"))-}
