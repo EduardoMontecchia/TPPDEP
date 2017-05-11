@@ -10,6 +10,7 @@ rodri = UnCliente "Rodri" 55 [] [grogXD, jarraLoca]
 marcos = UnCliente "Marcos" 40 [rodri] []
 cristian = UnCliente "Cristian" 2 [] []
 ana = UnCliente "Ana" 120 [marcos, rodri] []
+robertoCarlos = UnCliente "Roberto Carlos" 165 [] []
 
 --Punto 3
 comoEsta::Cliente->String
