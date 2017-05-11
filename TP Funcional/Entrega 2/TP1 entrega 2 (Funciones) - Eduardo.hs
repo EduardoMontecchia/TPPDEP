@@ -36,7 +36,7 @@ verificarAmistad cliente1 cliente2 = (nombre cliente1)==(nombre cliente2) || ele
 nombre (UnCliente n _ _ _) = n
 
 agregarAmigo::Cliente->Cliente->Cliente
-agregarAmigo (UnCliente n1 r1 a1 b1) (UnCliente n2 r2 a2 b2) = UnCliente n1 r1 ((UnCliente n2 r2 a2 b2):a1) b1
+agregarAmigo (UnCliente n2 r2 a2 b2) (UnCliente n1 r1 a1 b1) = UnCliente n1 r1 ((UnCliente n2 r2 a2 b2):a1) b1 
 
 --Punto 5
 amigos::Cliente->[Cliente] 
