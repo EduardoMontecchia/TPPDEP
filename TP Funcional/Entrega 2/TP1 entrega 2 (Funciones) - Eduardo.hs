@@ -78,38 +78,49 @@ recuperarResistencia tiempo
  
   --SEGUNDA ENTREGA
  
+--Punto 1
 tomarTragos (UnCliente n r a b) (bebida:bebidas) = foldl tomar (tomar (UnCliente n r a b) bebida) bebidas
 
 tomar (UnCliente n r a b) bebida = bebida (UnCliente n r a (bebida:b))
 
 dameOtro cliente = tomar cliente (ultimabebida cliente)
 
+--Punto 2
 --Si no usamos la funcion ultimabebida salta error
 cualesPuedeTomar (UnCliente n r a b) bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (UnCliente n r a b) bebidas))
 
 ultimabebida (UnCliente _ _ _ b) = last b
 
-mayor (UnCliente _ r _ b) | r>0 = True
-                          | otherwise = False
+mayor (UnCliente _ r _ b) 
+ | r>0 = True
+ | otherwise = False
 
 mapearBebidas cliente bebidas = map (tomar cliente) bebidas
 
 cuantasPuedeTomar cliente bebidas = length (cualesPuedeTomar cliente bebidas)
 
-{-  --SEGUNDA ENTREGA
- 
+--Punto 3
 data Itinerario = UnItinerario String Float [(Cliente->Cliente)] deriving (Show)
+
+robertoCarlos = UnCliente "Roberto Carlos" 165 [] []
+
 mezclaExplosiva = UnItinerario "Mezcla Explosiva" 2.5 [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
 itinerarioBasico = UnItinerario "Itinerario Básico" 5 [jarraLoca, klusener "chocolate", rescatarse 2, klusener "huevo"]
 salidaDeAmigos = UnItinerario "Salida de Amigos" 1 [soda 1, tintico, agregarAmigo robertoCarlos, jarraLoca]
 hacerItinerario (UnItinerario _ _ i) cliente = tomarTragos cliente i
-tomar (UnCliente n r a b) bebida= bebida (UnCliente n r a (bebida:b))
-tomarTragos (UnCliente n r a b) (bebida:bebidas) = foldl tomar (tomar (UnCliente n r a b) bebida) bebidas
-dameOtro cliente = tomar cliente (ultimabebida cliente)
-cualesPuedeTomar cliente bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (cliente) bebidas))
-ultimabebida (UnCliente _ _ _ b) = last b
-mayor (UnCliente _ r _ b) | r>0 = True
-                          | otherwise = False
-mapearBebidas cliente bebidas = map (tomar cliente) bebidas
-cuantasPuedeTomar cliente bebidas= length (cualesPuedeTomar cliente bebidas) 
--}
+
+--Punto 4
+intensidad (UnItinerario _ t a) = (genericLength a)/t
+
+
+
+--Punto 5
+chuckNorris = UnCliente "Chuck" 1000 [ana] [soda x|x<-[1..]]
+
+--Si usamos la funcion dameOtro con chuckNorris no terminaria nunca la ejecucion
+
+--Es posible usando la funcion compararResistencia
+compararResistencia (UnCliente _ r1 _ _) (UnCliente _ r2 _ _)
+ |r1==r2 = "Igual resistencia"
+ |r1<r2 = "Menor resistencia"
+ |r1>r2 = "Mayor resistencia"
