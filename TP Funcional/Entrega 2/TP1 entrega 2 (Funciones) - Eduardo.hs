@@ -77,14 +77,21 @@ recuperarResistencia tiempo
  
   --SEGUNDA ENTREGA
  
-tomar (UnCliente n r a b) bebida= bebida (UnCliente n r a (bebida:b))
---tomarTragos (UnCliente n r a b)  = tomar (UnCliente n r a b) 
---tomarTragos cliente x = tomar cliente x
+tomarTragos (UnCliente n r a b) (bebida:bebidas) = foldl tomar (tomar (UnCliente n r a b) bebida) bebidas
+
+tomar (UnCliente n r a b) bebida = bebida (UnCliente n r a (bebida:b))
+
 dameOtro cliente = tomar cliente (ultimabebida cliente)
-cualesPuedeTomar cliente bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (cliente) bebidas))
+
+--Si no usamos la funcion ultimabebida salta error
+cualesPuedeTomar (UnCliente n r a b) bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (UnCliente n r a b) bebidas))
+
 ultimabebida (UnCliente _ _ _ b) = last b
+
 mayor (UnCliente _ r _ b) | r>0 = True
                           | otherwise = False
+
 mapearBebidas cliente bebidas = map (tomar cliente) bebidas
-cuantasPuedeTomar cliente bebidas= length (cualesPuedeTomar cliente bebidas) 
+
+cuantasPuedeTomar cliente bebidas = length (cualesPuedeTomar cliente bebidas)
 
