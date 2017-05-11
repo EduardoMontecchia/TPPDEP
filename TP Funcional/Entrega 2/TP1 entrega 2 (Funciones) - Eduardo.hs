@@ -95,3 +95,20 @@ mapearBebidas cliente bebidas = map (tomar cliente) bebidas
 
 cuantasPuedeTomar cliente bebidas = length (cualesPuedeTomar cliente bebidas)
 
+{-  --SEGUNDA ENTREGA
+ 
+data Itinerario = UnItinerario String Float [(Cliente->Cliente)] deriving (Show)
+mezclaExplosiva = UnItinerario "Mezcla Explosiva" 2.5 [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
+itinerarioBasico = UnItinerario "Itinerario Básico" 5 [jarraLoca, klusener "chocolate", rescatarse 2, klusener "huevo"]
+salidaDeAmigos = UnItinerario "Salida de Amigos" 1 [soda 1, tintico, agregarAmigo robertoCarlos, jarraLoca]
+hacerItinerario (UnItinerario _ _ i) cliente = tomarTragos cliente i
+tomar (UnCliente n r a b) bebida= bebida (UnCliente n r a (bebida:b))
+tomarTragos (UnCliente n r a b) (bebida:bebidas) = foldl tomar (tomar (UnCliente n r a b) bebida) bebidas
+dameOtro cliente = tomar cliente (ultimabebida cliente)
+cualesPuedeTomar cliente bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (cliente) bebidas))
+ultimabebida (UnCliente _ _ _ b) = last b
+mayor (UnCliente _ r _ b) | r>0 = True
+                          | otherwise = False
+mapearBebidas cliente bebidas = map (tomar cliente) bebidas
+cuantasPuedeTomar cliente bebidas= length (cualesPuedeTomar cliente bebidas) 
+-}
