@@ -1,16 +1,16 @@
-
 {- Modelamos el tipo de dato cliente utilizando un tipo data con un String para el nombre, un Int para la resistencia y 
 una lista conformada por el mismo tipo data para representar a los amigos del cliente-}
 import Text.Show.Functions
+import Data.List
+
 --Punto 1
 data Cliente = UnCliente String Int [Cliente] [(Cliente -> Cliente)] deriving (Show)
 
 --Punto 2
-rodri = UnCliente "Rodri" 55 [] [grogXD, jarraLoca]
-marcos = UnCliente "Marcos" 40 [rodri] []
-cristian = UnCliente "Cristian" 2 [] []
+rodri = UnCliente "Rodri" 55 [] [tintico]
+marcos = UnCliente "Marcos" 40 [rodri] [klusener "guinda"]
+cristian = UnCliente "Cristian" 2 [] [grogXD, jarraLoca]
 ana = UnCliente "Ana" 120 [marcos, rodri] []
-robertoCarlos = UnCliente "Roberto Carlos" 165 [] []
 
 --Punto 3
 comoEsta::Cliente->String
@@ -29,13 +29,14 @@ tieneAmigos (UnCliente _ _ a _) = (length a)>1
 hacerAmistad::Cliente->Cliente->Cliente
 hacerAmistad cliente1 cliente2
  |verificarAmistad cliente1 cliente2 = cliente1
- |otherwise = (agregarAmigo cliente1 cliente2)
+ |otherwise = (agregarAmigo cliente2 cliente1)
 
 verificarAmistad::Cliente->Cliente->Bool
 verificarAmistad cliente1 cliente2 = (nombre cliente1)==(nombre cliente2) || elem (nombre cliente2) (map nombre (amigos cliente1))
 nombre (UnCliente n _ _ _) = n
 
 agregarAmigo::Cliente->Cliente->Cliente
+--El primer cliente se agrega como amigo al segundo
 agregarAmigo (UnCliente n2 r2 a2 b2) (UnCliente n1 r1 a1 b1) = UnCliente n1 r1 ((UnCliente n2 r2 a2 b2):a1) b1 
 
 --Punto 5
@@ -87,7 +88,7 @@ dameOtro cliente = tomar cliente (ultimabebida cliente)
 
 --Punto 2
 --Si no usamos la funcion ultimabebida salta error
-cualesPuedeTomar (UnCliente n r a b) bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas (UnCliente n r a b) bebidas))
+cualesPuedeTomar cliente bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas cliente bebidas))
 
 ultimabebida (UnCliente _ _ _ b) = last b
 
@@ -111,19 +112,17 @@ hacerItinerario (UnItinerario _ _ i) cliente = tomarTragos cliente i
 
 --Punto 4
 intensidad (UnItinerario _ t a) = (genericLength a)/t
-
+masIntenso itinerarios = itinerarios !! head (maximaIntensidad itinerarios)
+maximaIntensidad itinerarios = elemIndices (maximum (map intensidad itinerarios)) (map intensidad itinerarios)
+elMasIntenso cliente itinerarios = hacerItinerario (masIntenso itinerarios) cliente
 
 
 --Punto 5
 chuckNorris = UnCliente "Chuck" 1000 [ana] [soda x|x<-[1..]]
 
---Si usamos la funcion dameOtro con chuckNorris no terminaria nunca la ejecucion
+-- Si usamos la funcion dameOtro con chuckNorris nunca termina de generar el nombre por lo que falla la ejecución.
 
---Es posible
+-- Aplicando en consola la expresion " resistencia chuckNorris > resistencia ana " compara y muestra correctamente que es verdadero.
 resistencia (UnCliente _ r _ _) = r
-{-
-compararResistencia (UnCliente _ r1 _ _) (UnCliente _ r2 _ _)
- |r1==r2 = "Igual resistencia"
- |r1<r2 = "Menor resistencia"
- |r1>r2 = "Mayor resistencia"
--}
+
+
