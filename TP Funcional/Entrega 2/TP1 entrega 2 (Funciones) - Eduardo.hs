@@ -119,8 +119,11 @@ chuckNorris = UnCliente "Chuck" 1000 [ana] [soda x|x<-[1..]]
 
 --Si usamos la funcion dameOtro con chuckNorris no terminaria nunca la ejecucion
 
---Es posible usando la funcion compararResistencia
+--Es posible
+resistencia (UnCliente _ r _ _) = r
+{-
 compararResistencia (UnCliente _ r1 _ _) (UnCliente _ r2 _ _)
  |r1==r2 = "Igual resistencia"
  |r1<r2 = "Menor resistencia"
  |r1>r2 = "Mayor resistencia"
+-}
