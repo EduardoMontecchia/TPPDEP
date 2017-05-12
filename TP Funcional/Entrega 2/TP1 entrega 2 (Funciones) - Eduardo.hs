@@ -4,7 +4,7 @@ import Text.Show.Functions
 import Data.List
 
 --Punto 1
-data Cliente = UnCliente String Int [Cliente] [(Cliente -> Cliente)] deriving (Show)
+data Cliente = UnCliente String Int [Cliente] [Cliente -> Cliente] deriving (Show)
 
 --Punto 2
 rodri = UnCliente "Rodri" 55 [] [tintico]
@@ -37,7 +37,7 @@ nombre (UnCliente n _ _ _) = n
 
 agregarAmigo::Cliente->Cliente->Cliente
 --El primer cliente se agrega como amigo al segundo
-agregarAmigo (UnCliente n2 r2 a2 b2) (UnCliente n1 r1 a1 b1) = UnCliente n1 r1 ((UnCliente n2 r2 a2 b2):a1) b1 
+agregarAmigo unAmigo (UnCliente n1 r1 a1 b1) = UnCliente n1 r1 (unAmigo:a1) b1 
 
 --Punto 5
 amigos::Cliente->[Cliente] 
@@ -80,24 +80,24 @@ recuperarResistencia tiempo
   --SEGUNDA ENTREGA
  
 --Punto 1
-tomarTragos (UnCliente n r a b) (bebida:bebidas) = foldl tomar (tomar (UnCliente n r a b) bebida) bebidas
+tomarTragos :: Cliente -> [Cliente->Cliente] -> Cliente
+tomarTragos cliente bebidas = foldl tomar cliente bebidas
+tomar :: Cliente -> (Cliente->Cliente) -> Cliente
+tomar (UnCliente n r a b) bebida = bebida (UnCliente n r a (agregarTrago bebida b))
+agregarTrago :: (Cliente->Cliente) -> [Cliente->Cliente] -> [Cliente->Cliente]
+agregarTrago bebida bebidas = bebidas ++ [bebida]
 
-tomar (UnCliente n r a b) bebida = bebida (UnCliente n r a (bebida:b))
-
+dameOtro :: Cliente -> Cliente
 dameOtro cliente = tomar cliente (ultimabebida cliente)
-
---Punto 2
---Si no usamos la funcion ultimabebida salta error
-cualesPuedeTomar cliente bebidas= map (ultimabebida) (filter (mayor) (mapearBebidas cliente bebidas))
-
+ultimabebida :: Cliente -> (Cliente -> Cliente)
 ultimabebida (UnCliente _ _ _ b) = last b
 
-mayor (UnCliente _ r _ b) 
- | r>0 = True
- | otherwise = False
-
-mapearBebidas cliente bebidas = map (tomar cliente) bebidas
-
+--Punto 2
+cualesPuedeTomar :: Cliente -> [Cliente -> Cliente] -> [Cliente -> Cliente]
+cualesPuedeTomar cliente bebidas = filter (puedeTomar cliente) bebidas
+puedeTomar :: Cliente -> (Cliente -> Cliente) -> Bool
+puedeTomar cliente bebida = resistencia (tomar cliente bebida) > 0
+cuantasPuedeTomar :: Cliente -> [Cliente -> Cliente] -> Int
 cuantasPuedeTomar cliente bebidas = length (cualesPuedeTomar cliente bebidas)
 
 --Punto 3
@@ -111,11 +111,15 @@ salidaDeAmigos = UnItinerario "Salida de Amigos" 1 [soda 1, tintico, agregarAmig
 hacerItinerario (UnItinerario _ _ i) cliente = tomarTragos cliente i
 
 --Punto 4
+intensidad :: Itinerario -> Float
 intensidad (UnItinerario _ t a) = (genericLength a)/t
-masIntenso itinerarios = itinerarios !! head (maximaIntensidad itinerarios)
-maximaIntensidad itinerarios = elemIndices (maximum (map intensidad itinerarios)) (map intensidad itinerarios)
+elMasIntenso :: Cliente -> [Itinerario] -> Cliente
 elMasIntenso cliente itinerarios = hacerItinerario (masIntenso itinerarios) cliente
-
+masIntenso :: [Itinerario] -> Itinerario
+masIntenso (itinerario:itinerarios) = foldl (intensoEntre2) itinerario itinerarios
+intensoEntre2 :: Itinerario -> Itinerario -> Itinerario
+intensoEntre2 itinerario1 itinerario2 | intensidad itinerario1 > intensidad itinerario2 = itinerario1
+                                      | otherwise = itinerario2
 
 --Punto 5
 chuckNorris = UnCliente "Chuck" 1000 [ana] [soda x|x<-[1..]]
@@ -123,6 +127,5 @@ chuckNorris = UnCliente "Chuck" 1000 [ana] [soda x|x<-[1..]]
 -- Si usamos la funcion dameOtro con chuckNorris nunca termina de generar el nombre por lo que falla la ejecución.
 
 -- Aplicando en consola la expresion " resistencia chuckNorris > resistencia ana " compara y muestra correctamente que es verdadero.
+resistencia :: Cliente -> Int
 resistencia (UnCliente _ r _ _) = r
-
-
