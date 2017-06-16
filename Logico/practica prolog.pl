@@ -60,16 +60,25 @@ esUnAnio(Anio):-materia(_,Anio).
 esAlumno(Persona):-nota(Persona,_,_).
 regular(julieta).
 regular(eduardo).
-alumno(julieta).
-alumno(eduardo).
-alumno(cachito).
+alumno(julieta,2005).
+alumno(eduardo,2005).
+alumno(cachito,2025).
 asiste(eduardo).
 asiste(julieta).
 %cursoEjemplar:-forall(regular(Alumno),asiste(Alumno)).
-%cursoEjemplar:-forall((alumno(Alumno),regular(Alumno)),asiste(Alumno)).
-cursoEjemplar:-forall(alumno(Alumno),(regular(Alumno),asiste(Alumno))).
+%cursoEjemplar:-forall((alumno(Alumno,_),regular(Alumno)),asiste(Alumno)).
+cursoEjemplar:-forall(alumno(Alumno,_),(regular(Alumno),asiste(Alumno))).
 notas(ana,[1,2,3]).
 notas(carlos,[]).
 rindioMuchasVeces(Persona):-notas(Persona,Notas),sonMuchas(Notas).
 sonNotas(Notas):-notas(_,Notas).
 sonMuchas(Notas):-sonNotas(Notas),length(Notas,X),X>1.
+%length([1,2,3],X). En X se devuelve la cantidad de elementos de la lista, en este caso 3.
+%append([1,2],Y,[1,2,3]).=>[3]
+%append(X,[2],[1,2]).=>[1]
+%findall(X,alumno(X,2005),Alumnos). siendo Alumno una lista de alumnos, devuelve todos los X que cumplen
+cursoNumeroso(Curso):-curso(Curso),
+                      findall(X,alumno(X,Curso),Alumnos),
+					  length(Alumnos,Cant),
+					  Cant>30.
+curso(Curso):-alumno(_,Curso).
