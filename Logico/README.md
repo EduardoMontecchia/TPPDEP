@@ -1,0 +1,1 @@
+#Paradigma Lógico
