@@ -40,12 +40,12 @@ personaCorrectaAsignacionEnProy(Persona,Proyecto) :- trabajaEn(Proyecto,ListPers
 personaCorrectaAsignacionEnProy(Persona,Proyecto) :- trabajaEn(Proyecto,ListPersona),
 													member(Persona,ListPersona),
 													cumpleRol(Persona,projecLeader).
-													
-%estaparteestamal													
+																									
 													
 unProyectoEsDefinido(Proyecto):- proyecto(Proyecto,_),
-								forall(trabajaEn(Proyecto,ListPersona),(member(Persona,ListPersona),personaCorrectaAsignacionEnProy(Persona,Proyecto))),
-								esUnicoLider(Persona,Proyecto).
+                                 trabajaEn(Proyecto,ListPersona),
+								 forall(member(Persona,ListPersona),personaCorrectaAsignacionEnProy(Persona,Proyecto)),
+ 								 esUnicoLider(Persona,Proyecto).
 								
 								
 esUnicoLider(Persona,Proyecto):- cumpleRol(Persona,projecLeader),
