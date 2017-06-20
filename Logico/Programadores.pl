@@ -1,70 +1,67 @@
-/* parte 1 */
-lenguaje(java).
-lenguaje(net).
-lenguaje(cobol).
-lenguaje(visualBasic).
-lenguaje(ecmaScript).
-/* lenguaje(assembler).*/
+/* Parte 1 */
 
-programador(fernando,java).
-programador(fernando,cobol).
-programador(fernando,visualBasic).
-programador(julieta,java).
-programador(marcos,java).
-programador(santiago,java).
-programador(santiago,ecmaScript).
+programa(fernando,java).
+programa(fernando,cobol).
+programa(fernando,visualBasic).
+programa(julieta,java).
+programa(marcos,java).
+programa(santiago,java).
+programa(santiago,ecmaScript).
 
-analistaFuncional(fernando).
-projectLeader(andres).
-
-
-esProgramador(Alguien):- lenguaje(X),
-						programador(Alguien,X).
+cumpleRol(Persona,programador):-programa(Persona,_).
+cumpleRol(fernando,analistaFuncional).
+cumpleRol(andres,projectLeader).
 /* 
--aun no sabemos si julieta programo en go 
-no podemos escribier un predicado porque o tenemos informacion si ulieta programa en go 
+-Aún no sabemos si Julieta programó en Go:
+Al no tener certeza de si programó en Go no podemos escribir un predicado aseverándolo.
 
--nadie programo en Assembler
-por la defininicion de universo cerado y como tenemos la informacion de quien programa cierto lenguaje sabemos que nadie prgrama en Assembler
+-Nadie programo en Assembler: 
+Por defininicion de universo cerrado no es necesario aclarar este hecho, ya que el lengüaje al no encontrar a alguien que programe en Assembler deducirá que nadie lo hace.
 
 
 --consultas
-a
-programador(fernando,Lenguaje).
+A)
+?-programa(fernando,Lenguaje).
 Lenguaje = java ;
 Lenguaje = cobol ;
 Lenguaje = visualBasic.
 
-b
-?- programador(Persona,java).
+B)
+?- programa(Persona,java).
 Persona = fernando ;
 Persona = julieta ;
 Persona = marcos ;
 Persona = santiago.
 
-c
-?- programador(_,assembler).
+C)
+?- programa(_,assembler).
 false.
 
-d
-?- esProgramador(fernando).
-true
+D)
+?- cumpleRol(Fernando,programador).
 
-e
-?- esProgramador(Persona).
+E)
+?- cumpleRol(fernando,Rol).
+Rol = programador ;
+Rol = programador ;
+Rol = programador ;
+Rol = analistaFuncional.
+
+F)
+cumpleRol(Persona,programador).
+Persona = fernando ;
+Persona = fernando ;
 Persona = fernando ;
 Persona = julieta ;
 Persona = marcos ;
 Persona = santiago ;
-Persona = fernando ;
-Persona = fernando ;
 Persona = santiago.
 
-f
-?- projectLeader(_).
-true. */
+G)
+?- cumpleRol(_,proyectLeader).
+false.
 
-% ----parte2
+Parte 2 */
 
 proyecto(sumatra,net).
 proyecto(sumatra,java).
@@ -79,28 +76,25 @@ trabajaEn(sumatra,andres).
 
 %2
 
-personaCorrectaEnUnProyecto(Persona,Proyecto):- trabajaEn(Proyecto,Persona),
-												programador(Persona,Lenguaje),
-												proyecto(Proyecto,Lenguaje).
-												
-personaCorrectaEnUnProyecto(Persona,Proyecto):- trabajaEn(Proyecto,Persona),
-												analistaFuncional(Persona).
-
-personaCorrectaEnUnProyecto(Persona,Proyecto):- trabajaEn(Proyecto,Persona),
-												projectLeader(Persona).
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         proyecto(Proyecto,Lenguaje),
+										 programa(Persona,Lenguaje).
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         cumpleRol(Persona,analistaFuncional).
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         cumpleRol(Persona,projectLeader).
 												
 %3
-unProyectoEsDefinido(Proyecto):- proyecto(Proyecto,_),
-								forall(trabajaEn(Proyecto,Persona),personaCorrectaEnUnProyecto(Persona,Proyecto)),
+unProyectoEsBienDefinido(Proyecto):- proyecto(Proyecto,_),
+								forall(trabajaEn(Proyecto,Persona),correctamenteAsignada(Persona,Proyecto)),
 								esUnicoLider(Persona,Proyecto).
 								
-esUnicoLider(Persona,Proyecto):- projectLeader(Persona),
-						not((hayOtroLider(Persona,Proyecto))).
+esUnicoLider(Persona,Proyecto):-not(hayOtroLider(Persona,Proyecto)).
 						
 hayOtroLider(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
-								projectLeader(Persona),
+								cumpleRol(Persona,projectLeader),
 								trabajaEn(Proyecto,Persona2),
-								projectLeader(Persona2),
+								cumpleRol(Persona2,projectLeader),
 								Persona2 \= Persona.
 
 
@@ -130,19 +124,19 @@ Lapersona = marcos ;
 Lapersona = andres.
 
 6-
-?- personaCorrectaEnUnProyecto(Persona,sumatra).
+?- correctamenteAsignada(Persona,sumatra).
 Persona = julieta ;
 Persona = marcos ;
 Persona = andres.
 
 7-
-?- personaCorrectaEnUnProyecto(Persona,prometeus).
+?- correctamenteAsignada(Persona,prometeus).
 Persona = fernando ;
 Persona = fernando ;
 false.
 
 -8
-?- personaCorrectaEnUnProyecto(Persona,Proyecto).
+?- correctamenteAsignada(Persona,Proyecto).
 Persona = fernando,
 Proyecto = prometeus ;
 Persona = julieta,
@@ -154,22 +148,29 @@ Proyecto = prometeus ;
 Persona = andres,
 Proyecto = sumatra.
 
-9- ¿?
+9- 
+?- correctamenteAsignada(_,Proyecto).
+Proyecto = prometeus ;
+Proyecto = sumatra ;
+Proyecto = sumatra ;
+Proyecto = prometeus ;
+Proyecto = sumatra ;
+Proyecto = sumatra.
 
 Punto 3: Proyectos bien definidos
 
 10-
-?- unProyectoEsDefinido(Proyecto).
+?- unProyectoEsBienDefinido(Proyecto).
 Proyecto = sumatra ;
 Proyecto = sumatra ;
 false.
 
-11- ¿o la pregunta es de negacion?
-?- unProyectoEsDefinido(prometeus).
+11- 
+?- unProyectoEsBienDefinido(prometeus).
 false.
 
 12-
-?- (proyecto(Proyecto,_),not(unProyectoEsDefinido(Proyecto))).
+?- (proyecto(Proyecto,_),not(unProyectoEsBienDefinido(Proyecto))).
 Proyecto = prometeus.
 
 */
