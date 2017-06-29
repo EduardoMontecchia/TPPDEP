@@ -174,3 +174,31 @@ false.
 Proyecto = prometeus.
 
 */
+
+%Parte 3
+%4
+copadoCon(fernando, santiago).
+copadoCon(santiago, julieta).
+copadoCon(santiago, marcos).
+copadoCon(julieta, andres).
+
+puedeCoparseCon(Persona1, Persona2):- copadoCon(Persona1, Persona2).
+puedeCoparseCon(Persona1, Persona2):- copadoCon(Persona1, Persona3), copadoCon(Persona3, Persona2).
+puedeEnseniarUnLenguaje(Lenguaje, Persona1, Persona2):- puedeCoparseCon(Persona1, Persona2), programa(Persona1, Lenguaje), not(programa(Persona2, Lenguaje)).
+
+%5
+tarea(fernando, evolutiva(compleja)).  
+tarea(fernando, correctiva(8, brainfuck)).
+tarea(fernando, algorítmica(150)).
+tarea(marcos, algorítmica(20)).
+tarea(julieta, correctiva(412, cobol)).
+tarea(julieta, correctiva(21, go)).
+tarea(julieta, evolutiva(simple)). 
+
+puntosDeTarea(evolutiva(compleja), 5).
+puntosDeTarea(evolutiva(simple), 3).
+puntosDeTarea(correctiva(_, brainfuck), 4).
+puntosDeTarea(correctiva(Lineas,_), 4):- Lineas>50.
+puntosDeTarea(algorítmica(Lineas), Puntos):- Puntos is Lineas/10.
+
+gradoDeSeniority(Persona, Tarea):- 
