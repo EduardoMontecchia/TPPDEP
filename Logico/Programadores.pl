@@ -201,4 +201,10 @@ puntosDeTarea(correctiva(_, brainfuck), 4).
 puntosDeTarea(correctiva(Lineas,_), 4):- Lineas>50.
 puntosDeTarea(algoritmica(Lineas), Puntos):- Puntos is Lineas/10.
 
-gradoDeSeniority(Persona, Grado):- findall(Puntos, tarea(Persona,Tarea), puntosDeTarea(Tarea,Puntos), Lista), sumlist(Lista, Grado).
+gradoDeSeniority(Persona, Grado):- findall(Puntos, (tarea(Persona,Tarea), puntosDeTarea(Tarea,Puntos)), Lista), sumlist(Lista, Grado).
+
+/*
+otra opcion:
+puntosTotales(Persona, Puntos):- tarea(Persona, Tarea), puntosDeTarea(Tarea, Puntos).
+gradoDeSeniority(Persona, Grado):- programa(Persona,_), findall(Puntaje, puntosTotales(Persona, Puntaje), Puntos), sumlist(Puntos, Grado).
+*/
