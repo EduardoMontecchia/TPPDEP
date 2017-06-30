@@ -1,0 +1,164 @@
+/* Parte 1 */
+
+programa(fernando,java).
+programa(fernando,cobol).
+programa(fernando,visualBasic).
+programa(julieta,java).
+programa(marcos,java).
+programa(santiago,java).
+programa(santiago,ecmaScript).
+
+cumpleRol(Persona,programador):-programa(Persona,_).
+cumpleRol(fernando,analistaFuncional).
+cumpleRol(andres,projectLeader).
+
+%2
+
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         proyecto(Proyecto,Lenguaje),
+										 programa(Persona,Lenguaje).
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         cumpleRol(Persona,analistaFuncional).
+correctamenteAsignada(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+                                         cumpleRol(Persona,projectLeader).
+												
+%3
+unProyectoEsBienDefinido(Proyecto):- proyecto(Proyecto,_),
+								forall(trabajaEn(Proyecto,Persona),correctamenteAsignada(Persona,Proyecto)),
+								esUnicoLider(Persona,Proyecto).
+								
+esUnicoLider(Persona,Proyecto):-not(hayOtroLider(Persona,Proyecto)).
+						
+hayOtroLider(Persona,Proyecto):-trabajaEn(Proyecto,Persona),
+								cumpleRol(Persona,projectLeader),
+								trabajaEn(Proyecto,Persona2),
+								cumpleRol(Persona2,projectLeader),
+								Persona2 \= Persona.
+
+
+
+%4
+
+copado(fernando,[santiago]).
+copado(santiago,[julieta,marcos]).
+copado(julieta,[andres]).
+
+esCopado(Persona,Persona2):- copado(Persona,ListaDePersona),
+							member(Persona2,ListaDePersona).
+						
+					
+puedeEnseniar(Persona,Lenguaje,Persona2):- copado1(Persona),
+    									   copado2(Persona2),
+    									   lenguaje(Lenguaje),
+    									   programa(Persona,Lenguaje),
+										   not(programa(Persona2,Lenguaje)),
+										   esCopado(Persona,Persona2).
+
+puedeEnseniar(Persona,Lenguaje,Persona2):- copado1(Persona),
+    									   copado2(Persona2),
+    									   lenguaje(Lenguaje),
+    									   programa(Persona,Lenguaje),
+										   not(programa(Persona2,Lenguaje)),
+										   esCopado(Persona3,Persona2),
+										   puedeEnseniar(Persona,Lenguaje,Persona3).
+ 
+copado2(Persona2):- esCopado(_,Persona2).
+copado1(Persona):- copado(Persona,_).
+lenguaje(Lenguaje):- programa(_,Lenguaje).
+
+%5 
+
+tarea(fernando, evolutiva(compleja)).  
+tarea(fernando, correctiva(8, brainfuck)).
+tarea(fernando, algoritmica(150)).
+tarea(marcos, algoritmica(20)).
+tarea(julieta, correctiva(412, cobol)).
+tarea(julieta, correctiva(21, go)).
+tarea(julieta, evolutiva(simple)). 
+
+tarea2(Persona):-tarea(Persona,_).
+grados(Grados):- seniority(_,Grados).
+
+
+gradoDeSeniority(Persona,GradosTotales):- tarea2(Persona),
+    									  findall(Grados,seniority(Persona,Grados),ListaDePuntos),
+    									  sumlist(ListaDePuntos,GradosTotales).
+
+seniority(Persona,Grados):- tarea(Persona,evolutiva(compleja)),
+							cumpleRol(Persona,programador),
+							Grados is 5.
+seniority(Persona,Grados):- tarea(Persona,evolutiva(simple)),
+							cumpleRol(Persona,programador),
+							Grados is 3.
+
+seniority(Persona,Grados):- tarea(Persona,correctiva(Lineas,_)),
+    						Lineas > 50,
+    						Grados is 4.
+seniority(Persona,Grados):- tarea(Persona,correctiva(_,brainfuck)),
+    						Grados is 4.
+
+seniority(Persona,Grados):- tarea(Persona,algoritmica(Linea)),
+    						Grados is Linea/10.
+
+
+/*
+
+-----------------Casos de Pruebas----------------------
+
+-----------------
+-----Punto 4-----
+-----------------
+
+?- esCopado(fernando,santiago).
+true
+
+?- not(esCopado(fernando,julieta)).
+true
+
+?- puedeEnseniar(fernando,cobol,Persona).
+Persona = santiago
+Persona = julieta
+Persona = marcos
+Persona = andres
+false
+
+?- puedeEnseniar(fernando,haskell,_).
+false
+
+?-puedeEnseniar(Ensenia,java,andres).
+Ensenia = julieta
+Ensenia = julieta
+
+?-puedeEnseniar(fernando,Lenguaje,_).
+Lenguaje = cobol
+Lenguaje = visualBasic
+Lenguaje = cobol
+Lenguaje = visualBasic
+Lenguaje = cobol
+Lenguaje = visualBasic
+Lenguaje = cobol
+Lenguaje = visualBasic
+false
+
+?- not(puedeEnseniar(marcos,Lenguaje,_)).
+true
+
+-------------------
+-----Punto 5-------
+-------------------
+?-gradoDeSeniority(fernando,24). .....(ESTA PARTE PARA MI ESTA MAL)
+false
+
+?-gradoDeSeniority(Persona,0).
+false
+
+?-not(gradoDeSeniority(julieta,6)).
+true
+
+?-gradoDeSeniority(julieta,7).
+true
+
+
+*/
+
+
